@@ -183,10 +183,10 @@ int main()
     shop.push_back({ "chees", 0, 300 });
     string chname;
     int chcount;
-    int chmoney;
+    int chmoney = 3000;
     int hn = 0;
     int id = 0;
-    double a = 0;
+    double change = 0;
 
     while (true) {
 
@@ -197,7 +197,7 @@ int main()
 
 
         }
-
+        cout << "your money: " << chmoney << std::endl;
         cout << "\nchoose name\n";
         cin >> chname;
         for (int i = 0; i < 4; i++)
@@ -209,24 +209,27 @@ int main()
         }
         cout << "\nchoose number of products\n";
         cin >> chcount;
-        cout << "\n write your budget\n";
-        cin >> chmoney;
-        a = chmoney - chcount * shop[id].price;
+        change = chmoney - chcount * shop[id].price;
 
         if (shop[id].count < chcount)
         {
-            cout << "\nnot enough products in the shop\navailaible: " << shop[id].count;
+            cout << "\nnot enough products in the shop\n" << shop[id].count;
         }
-        else if (a >= 0)
+        else if (change >= 0)
         {
-            cout << "\nyour change: " << a << endl;
+            cout << "\nyour change: " << change << endl;
         }
-        else if (a < 0)
+        else if (change < 0)
         {
-            cout << "\nnot enough: \n" << abs(a) << endl;
+            cout << "\nnot enough: \n" << abs(change) << endl;
         }
-        
 
+
+        if (chmoney > 0 && shop[id].count >= chcount)
+        {
+            chmoney = change;
+            shop[id].count = shop[id].count - chcount;
+        }
 
        
     }
