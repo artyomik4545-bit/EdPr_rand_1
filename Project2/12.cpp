@@ -39,8 +39,8 @@ struct product_ {
 };
 
 product_ l;
-
-
+vector<product_> shop;
+vector<product_> basket;
 
 void game()
 {
@@ -172,21 +172,36 @@ void bsort()
     }
 }
 
-
+void item(string choice) {
+    if (choice == "b")
+    {
+        cout << endl;
+        cout << "basket\n";
+        for (int i = 0; i < size(basket); i++)
+        {
+            cout << basket[i].name << "\t" << basket[i].count << "\t" << basket[i].price << endl;
+        }
+        cout << endl;
+    }
+}
 
 int main()
 {
-    vector<product_> shop;
+    
     shop.push_back({ "banana", 2, 110 });
     shop.push_back({ "apple", 20, 150 });
     shop.push_back({ "tomato", 15, 200 });
     shop.push_back({ "chees", 0, 300 });
+    
+
+
     string chname;
     int chcount;
     int chmoney = 3000;
     int hn = 0;
     int id = 0;
     double change = 0;
+    
 
     while (true) {
 
@@ -200,36 +215,67 @@ int main()
         cout << "your money: " << chmoney << std::endl;
         cout << "\nchoose name\n";
         cin >> chname;
-        for (int i = 0; i < 4; i++)
+
+        item(chname);
+
+        
+       
+
+
+        for (int i = 0; i < shop.size(); i++)
         {
-            if (chname == shop[i].name)
-            {
+            if (chname == shop[i].name) {
+
                 id = i;
+
+                    cout << "\nchoose number of products\n";
+                    cin >> chcount;
+                    change = chmoney - chcount * shop[id].price;
+
+                    if (shop[id].count < chcount)
+                    {
+                        cout << "\nnot enough products in the shop\n" << shop[id].count;
+                    }
+                    else if (change >= 0)
+                    {
+                        cout << "\nyour change: " << change << endl;
+                    }
+                    else if (change < 0)
+                    {
+                        cout << "\nnot enough: \n" << abs(change) << endl;
+                    }
+
+
+                    if (chmoney > 0 && shop[id].count >= chcount)
+                    {
+                        chmoney = change;
+                        shop[id].count = shop[id].count - chcount;
+                    }
+                    
+                    if (basket.empty())
+                    {
+                        basket.push_back({ shop[id].name, chcount, shop[id].price });
+                    }
+                    else
+                    {
+                        for (int p = 0; p < basket.size(); p++)
+                        {
+                            if (shop[id].name == basket[p].name)
+                            {
+                                basket[p].count = basket[p].count + chcount;
+                            }
+                            else
+                            {
+                                basket.push_back({ shop[id].name, chcount, shop[id].price });
+                            }
+                        }
+                    }
+                    
+                    
             }
+            
         }
-        cout << "\nchoose number of products\n";
-        cin >> chcount;
-        change = chmoney - chcount * shop[id].price;
-
-        if (shop[id].count < chcount)
-        {
-            cout << "\nnot enough products in the shop\n" << shop[id].count;
-        }
-        else if (change >= 0)
-        {
-            cout << "\nyour change: " << change << endl;
-        }
-        else if (change < 0)
-        {
-            cout << "\nnot enough: \n" << abs(change) << endl;
-        }
-
-
-        if (chmoney > 0 && shop[id].count >= chcount)
-        {
-            chmoney = change;
-            shop[id].count = shop[id].count - chcount;
-        }
+        
 
        
     }
