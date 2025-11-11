@@ -1,154 +1,132 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 using namespace std;
+#include <Windows.h>
 
-struct product_ {
+struct location_
+{
     string name;
-    int count;
-    int price;
-
-    void test() {
-
-        int bot = 1 + rand() % 3;
-        int a = 0;
-        int i = 0;
-        while (i < 5)
-        {
-            std::cout << bot << std::endl;
-            std::cin >> a;
-            if (a == bot)
-            {
-                std::cout << "WIN" << std::endl;
-                bot = 1 + rand() % 3;
-                /*while (bot == a)
-                {
-                    bot = rand() % 5 + 1;
-                }*/
-                i++;
-            }
-            else
-            {
-                std::cout << "LOSE" << std::endl;
-            }
-
-        }
-
-    }
-
-
+    string inf;
 };
 
-product_ l;
-vector<product_> shop;
-vector<product_> basket;
-
-string chname;
-int chcount;
-int chmoney = 3000;
-int hn = 0;
-int id = 0;
-double change = 0;
-
-void assort()
+struct hero_
 {
-    for (int i = 0; i < shop.size(); i++) {
+    string name;
+    int dmg;
+    int hp;
+    int current_loc;
+};
 
-
-        cout << shop[i].name << "\t" << shop[i].count << "\t" << shop[i].price << endl;
-
-
-    }
-}
-
-void item(string choice) {
-    if (choice == "b")
-    {
-        cout << endl;
-        cout << "basket\n";
-        for (int i = 0; i < size(basket); i++)
-        {
-            cout << basket[i].name << "\t" << basket[i].count << "\t" << basket[i].price << endl;
-        }
-        cout << endl;
-    }
-}
-
-void choice()
+struct enemy_
 {
-    for (int i = 0; i < shop.size(); i++)
-    {
-        if (chname == shop[i].name)
-        {
+    string name;
+    int dmg;
+    int hp;
+    int current_loc;
+};
+location_ loc[3];
+hero_ Hero;
+enemy_ Enemy;
 
-            id = i;
-
-            cout << "\nchoose number of products or press b for open basket\n";
-            cin >> chcount;
-            change = chmoney - chcount * shop[id].price;
-
-            if (shop[id].count < chcount)
-            {
-                cout << "\nnot enough products in the shop\n" << shop[id].count;
-            }
-            else if (change >= 0)
-            {
-                cout << "\nyour change: " << change << endl;
-            }
-            else if (change < 0)
-            {
-                cout << "\nnot enough: \n" << abs(change) << endl;
-            }
-
-
-            if (chmoney > 0 && shop[id].count >= chcount)
-            {
-                chmoney = change;
-                shop[id].count = shop[id].count - chcount;
-            }
-
-            if (basket.empty())
-            {
-                basket.push_back({ shop[id].name, chcount, shop[id].price });
-            }
-            else
-            {
-                for (int p = 0; p < basket.size(); p++)
-                {
-                    if (shop[id].name == basket[p].name)
-                    {
-                        basket[p].count = basket[p].count + chcount;
-                    }
-                    else
-                    {
-                        basket.push_back({ shop[id].name, chcount, shop[id].price });
-                    }
-                }
-            }
-
-
-        }
-
-    }
-}
 
 int main()
 {
+    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 
-    shop.push_back({ "banana", 2, 110 });
-    shop.push_back({ "apple", 20, 150 });
-    shop.push_back({ "tomato", 15, 200 });
-    shop.push_back({ "chees", 0, 300 });
+    loc[0].name = "лес";
+    loc[0].inf = "темный";
 
-    while (true) 
+    loc[1].name = "подземелье";
+    loc[1].inf = "душно";
+
+    loc[2].name = "деревня";
+    loc[2].inf = "разрушенная";
+
+    Hero.name = "рыцарь";
+    Hero.dmg = 2;
+    Hero.hp = 16;
+    Hero.current_loc = 0;
+   
+    Enemy.name = "гоблин";
+    Enemy.dmg = 2;
+    Enemy.hp = 5;
+    Enemy.current_loc = 1;
+
+    for (int i = 0; i < 3; i++)
+    {
+        cout << i << "\t" << loc[i].name<< "\n";
+    }
+    int choice;
+    
+    while (true)
     {
 
-        assort();
-        cout << "your money: " << chmoney << std::endl;
-        cout << "\nchoose name\n";
-        cin >> chname;
+        cin >> choice;
 
-        item(chname);
+        for (int i = 0; i < 3; i++)
+        {
+            if (choice == i)
+            {
+                cout << loc[i].name << "\n";
+                cout << loc[i].inf << "\n";
+                Hero.current_loc = choice;
+            }
 
-        choice();
+        }
+
+        if (Hero.current_loc == Enemy.current_loc)
+        {
+            cout << "вы встретили врага" << "\n";
+            while (Hero.hp > 0 and Enemy.hp > 0)
+            {
+
+                int choice_attack;
+                srand(time(0));
+                cin >> choice_attack;
+
+                if (choice_attack == 1)
+                {
+                    Enemy.hp -= Hero.dmg;
+                    cout << "вы ударили противника мечом" << "\n";
+                }
+                else if (choice_attack == 2)
+                {
+                    Enemy.hp -= Hero.dmg / 2;
+                    cout << "вы ударили противника щитом" << "\n";
+                }
+                else
+                {
+
+                }
+                int choice_enemy = rand() % 2;
+                if (choice_enemy == 0)
+                {
+                    Hero.hp -= Enemy.dmg;
+                    cout << "противник нанес удар" << "\n";
+                }
+                else if (choice_enemy == 1)
+                {
+                    Hero.hp -= Enemy.dmg / 2;
+                    cout << "противник промахнулся" << "\n";
+                }
+                else
+                {
+
+                }
+
+                if (Enemy.hp < 1)
+                {
+                    cout << "противник повержен";
+                }
+                else if (Hero.hp < 1)
+                {
+                    cout << "вы погибли";
+                }
+            }
+        }
     }
+
+
 }
